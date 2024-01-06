@@ -137,7 +137,7 @@ client.on("messageReactionAdd", async (reaction, user) => {
 		var log_message = await log_channel.send(content)
 
 		var db_id = `${message.id}:${user.id}:${reaction.emoji.id}`
-		userDB.data[db_id] = {value: rank_update, log: log_message.id, msg: message.id}
+		userDB.data[db_id] = {value: rank_update, log: log_message.id, msg: message.id, time: Date.now()}
 		GLOBAL_DB.data[player.id] = true_rank
 
 		var prom_1 = GLOBAL_DB.write()
