@@ -126,6 +126,7 @@ client.on("messageReactionAdd", async (reaction, user) => {
 
 	var rank_update = MOVE_RANKINGS[reaction.emoji.id]
 
+	print((guild.id == MAIN_GUILD), (rank_update != null), (player.id != user.id), (rank_update < 0), (process.env["DEV_MODE"] == "true"))
 	if (guild.id == MAIN_GUILD && rank_update != null && (player.id != user.id || rank_update < 0 || process.env["DEV_MODE"] == "true")) {
 		print("good")
 
