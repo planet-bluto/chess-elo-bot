@@ -252,7 +252,7 @@ chat_command("rank", "Returns your current ranking information", async (msg) => 
 	await msg.reply(`# ELO: ${rank} *(#${global_standing})*\n${val_lines.join("\n")}`)
 })
 
-chat_command("levels", "Returns the entire server's current ranking information", async (msg) => {
+chat_command("ranks", "Returns the entire server's current ranking information", async (msg) => {
 	var global_standings = calc_standings()
 	var guild = await client.guilds.fetch(process.env["GUILD"])
 
@@ -279,7 +279,7 @@ chat_command("levels", "Returns the entire server's current ranking information"
 		lines.push(`[ ${medal} ] **${displayname}**: ${standing.rank}`)
 	})
 
-	await msg.reply(lines.join("\n"))
+	await msg.reply(`# Top Ranks\n${lines.join("\n")}`)
 })
 
 //// START UP ////
