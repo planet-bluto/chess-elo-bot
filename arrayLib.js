@@ -51,6 +51,8 @@ Array.prototype.asyncForEach = async function(func) {
 				}
 			}
 			loop()
+		} else {
+			res([])
 		}
 	})
 }
