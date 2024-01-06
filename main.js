@@ -88,7 +88,7 @@ async function rank_update_text(rank_update, guild, channel, message, player, re
 	var to_values = (arr) => {return arr.map(obj => obj.value)}
 	var temp_arr = to_values(Object.values(userDB.data))
 
-	var old_rank = Math.round(average(temp_arr) * MULTIPLIER + MULTIPLIER)
+	var old_rank = Math.round(average(temp_arr) * MULTIPLIER)
 
 	if (!undo) {
 		temp_arr.push(rank_update)
@@ -99,7 +99,7 @@ async function rank_update_text(rank_update, guild, channel, message, player, re
 		print(temp_arr.length)
 	}
 
-	var true_rank = (average(temp_arr) * MULTIPLIER + MULTIPLIER)
+	var true_rank = (average(temp_arr) * MULTIPLIER)
 	var rank = Math.round(true_rank)
 
 	var member = await guild.members.fetch(player.id)
@@ -231,7 +231,7 @@ chat_command("rank", "Returns your current ranking information", async (msg) => 
 
 	var to_values = (arr) => {return arr.map(obj => obj.value)}
 	var values = to_values(Object.values(userDB.data))
-	var rank = Math.round(average(values) * MULTIPLIER + MULTIPLIER)
+	var rank = Math.round(average(values) * MULTIPLIER)
 
 	var counts = {}
 	values.forEach(val => {
@@ -297,9 +297,9 @@ function average(arr) {
 
 	var val = (sum / arr.length)
 
-	if (val == NaN) { val = 0 }
+	if (isNaN(val)) { val = 0 }
 
-	return val
+	return (val + 4)
 }
 
 function calc_standings() {
