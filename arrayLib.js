@@ -35,21 +35,23 @@ Array.prototype.asyncForEach = async function(func) {
 	var funcs = []
 	var reses = []
 	return new Promise(async (res, rej) => {
-		this.forEach((...args) => {
-			funcs.push(func.bind(this, ...args))
-		})
+		if (this.length < 0) {
+			this.forEach((...args) => {
+				funcs.push(func.bind(this, ...args))
+			})
 
-		async function loop() {
-			var this_res = await funcs[i]()
-			reses.push(this_res)
-			i++
-			if (i == length) {
-				res(reses)
-			} else {
-				loop()
+			async function loop() {
+				var this_res = await funcs[i]()
+				reses.push(this_res)
+				i++
+				if (i == length) {
+					res(reses)
+				} else {
+					loop()
+				}
 			}
+			loop()
 		}
-		loop()
 	})
 }
 
