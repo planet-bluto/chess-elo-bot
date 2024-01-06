@@ -276,7 +276,7 @@ chat_command("ranks", "Returns the entire server's current ranking information",
 		var displayname = (member.nickname || player.displayName || player.username)
 		var medal = (MEDALS[String(ind+1)] || `${ind+1}`)
 
-		lines.push(`[ ${medal} ] **${displayname}**: ${standing.rank}`)
+		lines.push(`[ ${medal} ] **${displayname}**: ${Math.round(standing.rank)}`)
 	})
 
 	await msg.reply(`# Top Ranks\n${lines.join("\n")}`)
