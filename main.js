@@ -126,7 +126,7 @@ client.on("messageReactionAdd", async (reaction, user) => {
 
 	var rank_update = MOVE_RANKINGS[reaction.emoji.id]
 
-	if (guild.id == MAIN_GUILD && rank_update != null && (player.id != user.id || (rank_update < 0) || (user.id == "334039742205132800" && (process.env["DEV_MODE"] == "true")))) {
+	if (guild.id == MAIN_GUILD && rank_update != null && (player.id != user.id || rank_update < 0 || process.env["DEV_MODE"] == "true")) {
 		print("good")
 
 		var log_channel = await client.channels.fetch(process.env["LOG_CHANNEL"])
