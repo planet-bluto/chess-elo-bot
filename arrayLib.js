@@ -52,3 +52,14 @@ Array.prototype.asyncForEach = async function(func) {
 		loop()
 	})
 }
+
+Array.prototype.last = function(offset = 1) {
+	return this[this.length-offset]
+}
+
+Array.prototype.remove = function (index) {
+    if (index > -1 && index < this.length-1) {
+    	var return_value = this.splice(index, 1)
+    	return return_value
+    }
+}
