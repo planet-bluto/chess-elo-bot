@@ -105,15 +105,15 @@ MOVE_VALUES[process.env["EMOTE_GREAT_ID"]] = 2
 MOVE_VALUES[process.env["EMOTE_BRILLIANT_ID"]] = 3
 MOVE_VALUES[process.env["EMOTE_BEST_ID"]] = 4
 
-MOVE_ALIASES["🚮"] = process.env["EMOTE_BLUNDER_ID"]
-MOVE_ALIASES["1177121359831253072"] = process.env["EMOTE_MISS_ID"]
-MOVE_ALIASES["🧢"] = process.env["EMOTE_INACCURACY_ID"]
-MOVE_ALIASES["❌"] = process.env["EMOTE_MISS_ID"]
-MOVE_ALIASES["❔"] = process.env["EMOTE_MISTAKE_ID"]
-MOVE_ALIASES["⬆️"] = process.env["EMOTE_GOOD_ID"]
-MOVE_ALIASES["💖"] = process.env["EMOTE_GREAT_ID"]
-MOVE_ALIASES["🔥"] = process.env["EMOTE_BRILLIANT_ID"]
-MOVE_ALIASES["📠"] = process.env["EMOTE_BEST_ID"]
+MOVE_ALIASES["🚮"] = process.env["EMOTE_BLUNDER_ID"] // -4
+MOVE_ALIASES["1177121359831253072"] = process.env["EMOTE_MISS_ID"] // -3
+MOVE_ALIASES["🧢"] = process.env["EMOTE_INACCURACY_ID"] // -2
+MOVE_ALIASES["❌"] = process.env["EMOTE_MISS_ID"] // -3
+MOVE_ALIASES["❔"] = process.env["EMOTE_MISTAKE_ID"] // -1
+MOVE_ALIASES["⬆️"] = process.env["EMOTE_GOOD_ID"] // 1
+MOVE_ALIASES["💖"] = process.env["EMOTE_GREAT_ID"] // 2
+MOVE_ALIASES["🔥"] = process.env["EMOTE_BRILLIANT_ID"] // 3
+MOVE_ALIASES["📠"] = process.env["EMOTE_BEST_ID"] // 4
 
 function calc_update(reaction) {
 	var input = (reaction.emoji.id || MOVE_ALIASES[reaction.emoji.name])
@@ -250,20 +250,16 @@ function addReactionEvent(reaction) {
 				log_message = await log_channel.send(content)
 			}
 
-			userDB.read().then(() => {
-				userDB.data[db_id] = {mult, value: elo_update, log: log_message.id, msg: message.id, time: Date.now()}
-				userDB.write()
-			})
+			var read_1 = GLOBAL_DB.read()
+			var read_2 = userDB.read()
+			await Promise.all([read_1, read_2])
 
-			GLOBAL_DB.read().then(() => {
-				GLOBAL_DB.data[player.id] = true_elo
-				GLOBAL_DB.write()
-			})
+			userDB.data[db_id] = {mult, value: elo_update, log: log_message.id, msg: message.id, time: Date.now()}
+			GLOBAL_DB.data[player.id] = true_elo
 
-			// var prom_1 = GLOBAL_DB.write()
-			// var prom_2 = userDB.write()
-
-			// await Promise.all([prom_1, prom_2])
+			var write_1 = GLOBAL_DB.write()
+			var write_2 = userDB.write()
+			await Promise.all([write_1, write_2])
 		}
 	})
 }
@@ -296,22 +292,23 @@ function removeReactionEvent(reaction, override = null) {
 					print(`? Message '${update_entry.log}' Gone?`)
 				}
 
+				var read_1 = GLOBAL_DB.read()
+				var read_2 = userDB.read()
+				var reads = [read_1]
+				if (deletings) {reads.push(read_2)}
+				await Promise.all(reads)
+
 				if (deletings) {
-					userDB.read().then(() => {
-						delete userDB.data[db_id]
-						userDB.write()
-					})	
+					delete userDB.data[db_id]
 				}
 
-				GLOBAL_DB.read().then(() => {
-					GLOBAL_DB.data[player.id] = true_elo
-					GLOBAL_DB.write()
-				})
+				GLOBAL_DB.data[player.id] = true_elo
 
-				// var prom_1 = userDB.write()
-				// var prom_2 = GLOBAL_DB.write()
-
-				// await Promise.all([prom_1, prom_2])
+				var write_1 = GLOBAL_DB.write()
+				var write_2 = userDB.write()
+				var writes = [write_1]
+				if (deletings) {reads.push(write_2)}
+				await Promise.all(writes)
 			}
 		}
 	})
