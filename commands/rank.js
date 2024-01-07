@@ -44,7 +44,7 @@ async function execute(interaction) {
 
 	var userDB = await initDB(`user/${player.id}`, {})
 
-	var to_values = (arr) => {return arr.map(obj => obj.value)}
+	var to_values = (arr) => {return arr.map(obj => (obj.value * obj.mult))}
 	var values = to_values(Object.values(userDB.data))
 	var elo = calc_elo(values)
 	var { RANK, RANK_STRING, RANK_IND, SUB_RANK } = calc_tier(elo)

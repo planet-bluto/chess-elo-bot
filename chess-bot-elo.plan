@@ -1,10 +1,10 @@
 {
   "version": "0.8.0-alpha.8.1",
   "pan": {
-    "X": -540.6615,
-    "Y": 427.0352
+    "X": -529.25946,
+    "Y": 413.18582
   },
-  "zoom": 0.5346195697784424,
+  "zoom": 0.5041894912719727,
   "currentPage": 0,
   "properties": {
     "CacheDirectory": ""
@@ -13,10 +13,10 @@
     {
       "id": 0,
       "pan": {
-        "X": -540.6614,
-        "Y": 427.03525
+        "X": -529.25977,
+        "Y": 413.185
       },
-      "zoom": 0.5346195697784424,
+      "zoom": 0.5041894912719727,
       "cards": [
         {
           "id": 4,
@@ -32,7 +32,8 @@
           "contents": "Checkbox",
           "properties": {
             "checked": false,
-            "description": "Slash Commands"
+            "description": "Slash Commands",
+            "filepath": ""
           }
         },
         {
@@ -49,7 +50,8 @@
           "contents": "Checkbox",
           "properties": {
             "checked": false,
-            "description": "Embeds"
+            "description": "Embeds",
+            "filepath": ""
           }
         },
         {
@@ -66,7 +68,8 @@
           "contents": "Checkbox",
           "properties": {
             "checked": false,
-            "description": "Montly Resets"
+            "description": "Montly Resets",
+            "filepath": ""
           }
         },
         {
@@ -83,7 +86,8 @@
           "contents": "Checkbox",
           "properties": {
             "checked": false,
-            "description": "ELO Tiers"
+            "description": "ELO Tiers",
+            "filepath": ""
           }
         },
         {
@@ -100,7 +104,8 @@
           "contents": "Checkbox",
           "properties": {
             "checked": true,
-            "description": "Rank"
+            "description": "Rank",
+            "filepath": ""
           }
         },
         {
@@ -117,7 +122,8 @@
           "contents": "Checkbox",
           "properties": {
             "checked": true,
-            "description": "Commands"
+            "description": "Commands",
+            "filepath": ""
           }
         },
         {
@@ -134,7 +140,8 @@
           "contents": "Checkbox",
           "properties": {
             "checked": false,
-            "description": "calc_elo function only uses current month updates"
+            "description": "calc_elo function only uses current month updates",
+            "filepath": ""
           }
         },
         {
@@ -150,7 +157,8 @@
           "uncollapsedSizeY": 832,
           "contents": "Note",
           "properties": {
-            "description": "\n[ Radiant ]\nx ≥ 3000\n\n[ Diamond ]\n3: 2999 ≥ x ≥ 2750\n2: 2749 ≥ x ≥ 2500\n1: 2499 ≥ x ≥ 2250\n\n[ Gold ]\n3: 2249 ≥ x ≥ 2000\n2: 1999 ≥ x ≥ 1750\n1: 1749 ≥ x ≥ 1500\n\n[ Mid ]\n3: 1499 ≥ x ≥ 1250\n2: 1249 ≥ x ≥ 1000 \n1: 999 ≥ x ≥ 750\n\n[ Shit ]\n3: 749 ≥ x ≥ 500\n2: 499 ≥ x ≥ 250\n1: 249 ≥ x ≥ 0\n\n[ BLUNDER ]\nx \u003c 0"
+            "description": "\n[ Radiant ]\nx ≥ 3000\n\n[ Diamond ]\n3: 2999 ≥ x ≥ 2750\n2: 2749 ≥ x ≥ 2500\n1: 2499 ≥ x ≥ 2250\n\n[ Gold ]\n3: 2249 ≥ x ≥ 2000\n2: 1999 ≥ x ≥ 1750\n1: 1749 ≥ x ≥ 1500\n\n[ Mid ]\n3: 1499 ≥ x ≥ 1250\n2: 1249 ≥ x ≥ 1000 \n1: 999 ≥ x ≥ 750\n\n[ Shit ]\n3: 749 ≥ x ≥ 500\n2: 499 ≥ x ≥ 250\n1: 249 ≥ x ≥ 0\n\n[ BLUNDER ]\nx \u003c 0",
+            "filepath": ""
           }
         },
         {
@@ -167,7 +175,8 @@
           "contents": "Checkbox",
           "properties": {
             "checked": true,
-            "description": "Leaderboard"
+            "description": "Leaderboard",
+            "filepath": ""
           }
         },
         {
@@ -184,7 +193,8 @@
           "contents": "Checkbox",
           "properties": {
             "checked": false,
-            "description": "ELO Updates"
+            "description": "ELO Updates",
+            "filepath": ""
           }
         },
         {
@@ -201,7 +211,8 @@
           "contents": "Checkbox",
           "properties": {
             "checked": false,
-            "description": "Admin Commands"
+            "description": "Admin Commands",
+            "filepath": ""
           }
         },
         {
@@ -218,7 +229,8 @@
           "contents": "Checkbox",
           "properties": {
             "checked": false,
-            "description": "Clear Database"
+            "description": "Clear Database",
+            "filepath": ""
           }
         },
         {
@@ -235,7 +247,8 @@
           "contents": "Checkbox",
           "properties": {
             "checked": false,
-            "description": "Blacklist Management"
+            "description": "Blacklist Management",
+            "filepath": ""
           }
         },
         {
@@ -252,7 +265,8 @@
           "contents": "Checkbox",
           "properties": {
             "checked": false,
-            "description": "Add"
+            "description": "Add",
+            "filepath": ""
           }
         },
         {
@@ -269,7 +283,8 @@
           "contents": "Checkbox",
           "properties": {
             "checked": false,
-            "description": "Remove"
+            "description": "Remove",
+            "filepath": ""
           }
         }
       ]
