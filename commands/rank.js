@@ -68,29 +68,31 @@ async function execute(interaction) {
 	var rank_emote = RANK_EMOTES[RANK]
 	var rank_color = RANK_COLORS[RANK]
 
-	var counts = {}
-	values.forEach(val => {
-		if (counts[String(val)] == null) { counts[String(val)] = 0 }
-		counts[String(val)] += 1
-	})
-
 	var fields = []
-	var vals = Object.keys(counts)
-
-	vals.sort((a, b) => {
-		return Number(b) - Number(a)
-	})
-
-	vals.forEach(val => {
-		var count = counts[val]
-		var emote = val_to_emote(Number(val))
-		var prettyName = val_to_name(Number(val))
-		fields.push({
-			name: `${emote} **${prettyName}** ${emote}`,
-			value: String(count),
-			inline: true
+	if (values.length > 0) {
+		var counts = {}
+		values.forEach(val => {
+			if (counts[String(val)] == null) { counts[String(val)] = 0 }
+			counts[String(val)] += 1
 		})
-	})
+
+		var vals = Object.keys(counts)
+
+		vals.sort((a, b) => {
+			return Number(b) - Number(a)
+		})
+
+		vals.forEach(val => {
+			var count = counts[val]
+			var emote = val_to_emote(Number(val))
+			var prettyName = val_to_name(Number(val))
+			fields.push({
+				name: `${emote} **${prettyName}** ${emote}`,
+				value: String(count),
+				inline: true
+			})
+		})
+	}
 
 	var global_standings = calc_standings()
 	var global_standing = (global_standings.findIndex(obj => obj.player == player.id) + 1)
@@ -105,7 +107,7 @@ async function execute(interaction) {
 	  .addFields(...fields)
 	  .setColor(rank_color)
 	  .setFooter({
-	  	text: `Global Standing: ${ordinal_suffix_of(global_standing)}`
+	  	text: ((global_standing > 0) ? `Global Standing: ${ordinal_suffix_of(global_standing)}` : `No Global Standing Available`)
 	  })
 
 	await interaction.reply({embeds: [embed]})
