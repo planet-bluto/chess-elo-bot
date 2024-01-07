@@ -164,7 +164,9 @@ async function elo_update_text(elo_update, mult, guild, channel, message, player
 
 		if (new_val == 0) {
 			var index = temp_arr.findIndex(val => (val == curr_val))
-			temp_arr = temp_arr.toSpliced(index, 1)
+			if (Array.isArray(temp_arr)) {
+				temp_arr = temp_arr.toSpliced(index, 1)
+			}
 		} else {
 			var index = temp_arr.findIndex(val => (val == curr_val))
 			temp_arr[index] = new_val
