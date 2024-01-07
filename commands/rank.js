@@ -47,7 +47,8 @@ async function execute(interaction) {
 	var to_values = (arr) => {return arr.map(obj => (obj.value * obj.mult))}
 	var values = to_values(Object.values(userDB.data))
 	var elo = calc_elo(values)
-	var { RANK, RANK_STRING, RANK_IND, SUB_RANK } = calc_tier(elo)
+	var true_elo = calc_elo(values, false)
+	var { RANK, RANK_STRING, RANK_IND, SUB_RANK } = calc_tier(true_elo)
 	const RANK_EMOTES = {
 		"BLUNDER": "<:blunder:1193038725190533171>",
 		"SHIT": "💩",
