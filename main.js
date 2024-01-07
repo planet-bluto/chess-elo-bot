@@ -106,14 +106,14 @@ MOVE_VALUES[process.env["EMOTE_BRILLIANT_ID"]] = 3
 MOVE_VALUES[process.env["EMOTE_BEST_ID"]] = 4
 
 MOVE_ALIASES["🚮"] = process.env["EMOTE_BLUNDER_ID"]
-MOVE_ALIASES["❌"] = process.env["EMOTE_MISS_ID"]
-MOVE_ALIASES["🧢"] = process.env["EMOTE_MISS_ID"]
 MOVE_ALIASES["1177121359831253072"] = process.env["EMOTE_MISS_ID"]
-MOVE_ALIASES["❔"] = process.env["EMOTE_INACCURACY_ID"]
+MOVE_ALIASES["🧢"] = process.env["EMOTE_INACCURACY_ID"]
+MOVE_ALIASES["❌"] = process.env["EMOTE_MISS_ID"]
+MOVE_ALIASES["❔"] = process.env["EMOTE_MISTAKE_ID"]
 MOVE_ALIASES["⬆️"] = process.env["EMOTE_GOOD_ID"]
-MOVE_ALIASES["💖"] = process.env["EMOTE_GOOD_ID"]
-MOVE_ALIASES["🔥"] = process.env["EMOTE_GREAT_ID"]
-MOVE_ALIASES["📠"] = process.env["EMOTE_BRILLIANT_ID"]
+MOVE_ALIASES["💖"] = process.env["EMOTE_GREAT_ID"]
+MOVE_ALIASES["🔥"] = process.env["EMOTE_BRILLIANT_ID"]
+MOVE_ALIASES["📠"] = process.env["EMOTE_BEST_ID"]
 
 function calc_update(reaction) {
 	var input = (reaction.emoji.id || MOVE_ALIASES[reaction.emoji.name])
