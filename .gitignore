@@ -1,5 +1,3 @@
 .env
 /database/db
 /node_modules
-chess-bot-elo.plan
-*.plan_bak_01_07_24_04_18_32
