@@ -47,7 +47,7 @@ async function execute(interaction) {
 	}
 
 	var fields = []
-	global_standings.slice(0, 10)
+	global_standings = global_standings.slice(0, 10)
 	var thumbnail = "https://i.imgur.com/UGdS7rA.png"
 	await global_standings.awaitForEach(async (standing, ind) => {
 		var prom_1 = client.users.fetch(standing.player)
