@@ -11,7 +11,7 @@ class ReplDBAdapter {
 	}
 
 	async write(data) {
-		await this.db.set(this.key, data)
+		return this.db.set(this.key, data)
 	}
 }
 
