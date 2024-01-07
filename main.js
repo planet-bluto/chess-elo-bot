@@ -157,6 +157,7 @@ async function elo_update_text(elo_update, mult, guild, channel, message, player
 	} else {
 		// print(temp_arr.length)
 		// print_dev(temp_arr)
+		var temp_mult = mult
 		if (mult < 1) { temp_mult = 0 }
 		var curr_val = (elo_update * (mult+(1/3)))
 		var new_val = (elo_update * temp_mult)
