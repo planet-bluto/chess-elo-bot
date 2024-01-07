@@ -506,13 +506,9 @@ global.calc_tier = (elo) => {
 	const clamp = (num, min, max) => Math.min(Math.max(num, min), max)
 
 	var RANK_IND = clamp((Math.floor(elo / (3000/4))+1), 0, 5)
-	print(RANK_IND)
 	var RANK = RANKS[RANK_IND]
-	print(RANK)
 	var SUB_RANK = ((RANK_IND > 0 && RANK_IND < 5) ? ((Math.floor(elo / (3000/12)) % 3) + 1) : "")
-	print(SUB_RANK)
 	var RANK_STRING = `${RANK} ${SUB_RANK}`.trim()
-	print(RANK_STRING)
 
 	return { RANK, RANK_STRING, RANK_IND, SUB_RANK }
 }

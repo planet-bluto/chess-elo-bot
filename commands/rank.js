@@ -45,7 +45,9 @@ async function execute(interaction) {
 	var userDB = await initDB(`user/${player.id}`, {})
 
 	var to_values = (arr) => {return arr.map(obj => (obj.value * obj.mult))}
+	var to_og_values = (arr) => {return arr.map(obj => (obj.value * obj.mult))}
 	var values = to_values(Object.values(userDB.data))
+	var og_values = to_og_values(Object.values(userDB.data))
 	var elo = calc_elo(values)
 	var true_elo = calc_elo(values, false)
 	var { RANK, RANK_STRING, RANK_IND, SUB_RANK } = calc_tier(true_elo)
@@ -70,9 +72,9 @@ async function execute(interaction) {
 	var rank_color = RANK_COLORS[RANK]
 
 	var fields = []
-	if (values.length > 0) {
+	if (og_values.length > 0) {
 		var counts = {}
-		values.forEach(val => {
+		og_values.forEach(val => {
 			if (counts[String(val)] == null) { counts[String(val)] = 0 }
 			counts[String(val)] += 1
 		})
