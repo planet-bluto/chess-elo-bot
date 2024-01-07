@@ -45,7 +45,7 @@ async function execute(interaction) {
 	var userDB = await initDB(`user/${player.id}`, {})
 
 	var to_values = (arr) => {return arr.map(obj => (obj.value * obj.mult))}
-	var to_og_values = (arr) => {return arr.map(obj => (obj.value * obj.mult))}
+	var to_og_values = (arr) => {return arr.map(obj => (obj.value))}
 	var values = to_values(Object.values(userDB.data))
 	var og_values = to_og_values(Object.values(userDB.data))
 	var elo = calc_elo(values)
