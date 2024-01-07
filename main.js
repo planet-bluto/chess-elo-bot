@@ -493,6 +493,8 @@ global.calc_elo = (arr, rounded = true) => {
 		sum += (val*MULTIPLIER)
 	})
 
+	if (rounded) { sum = Math.round(sum) }
+
 	return sum
 }
 
