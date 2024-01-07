@@ -499,6 +499,9 @@ global.calc_elo = (arr, rounded = true) => {
 }
 
 global.calc_tier = (elo) => {
+	elo = Number(elo)
+	print(elo)
+
 	const RANKS = ["BLUNDER", "SHIT", "MID", "GOLD", "DIAMOND", "RADIANT"]
 
 	// var elo = 9000
