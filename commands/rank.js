@@ -98,7 +98,7 @@ async function execute(interaction) {
 	}
 
 	var global_standings = await calc_standings()
-	var global_standing = (global_standings.findIndex(obj => obj.player == player.id) + 1)
+	var global_standing = (global_standings.findIndex(obj => obj.player_id == player.id) + 1)
 
 
 	const embed = new EmbedBuilder()
