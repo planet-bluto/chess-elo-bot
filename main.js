@@ -541,7 +541,7 @@ global.calc_standings = async () => {
 		var temp_arr = to_values(Object.values(userDB.data))
 		var elo = calc_elo(temp_arr)
 
-		standings.push({player, elo})
+		standings.push({player_id, elo})
 	})
 
 	standings.sort((a, b) => {

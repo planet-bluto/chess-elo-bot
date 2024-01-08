@@ -50,8 +50,8 @@ async function execute(interaction) {
 	global_standings = global_standings.slice(0, 10)
 	var thumbnail = "https://i.imgur.com/UGdS7rA.png"
 	await global_standings.awaitForEach(async (standing, ind) => {
-		var prom_1 = client.users.fetch(standing.player)
-		var prom_2 = guild.members.fetch(standing.player)
+		var prom_1 = client.users.fetch(standing.player_id)
+		var prom_2 = guild.members.fetch(standing.player_id)
 
 		var reses = await Promise.all([prom_1, prom_2])
 
