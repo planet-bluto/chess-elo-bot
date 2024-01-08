@@ -30,7 +30,7 @@ async function execute(interaction) {
 
 	var userDB = await initDB(`user/${player.id}`, {})
 
-	var global_standings = calc_standings()
+	var global_standings = await calc_standings()
 	var guild = await client.guilds.fetch(process.env["GUILD"])
 
 	const MEDALS = {

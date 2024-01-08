@@ -530,11 +530,17 @@ global.calc_tier = (elo) => {
 // 	}
 // }
 
-global.calc_standings = () => {
+global.calc_standings = async () => {
 	var standings = []
 
-	Object.keys(GLOBAL_DB.data).forEach(player => {
-		var elo = GLOBAL_DB.data[player]
+	await Object.keys(GLOBAL_DB.data).awaitForEach(async player_id => {
+		// var elo = GLOBAL_DB.data[player_id]
+
+		var userDB = await initDB(`user/${player_id}`, {})
+		var to_values = (arr) => {return arr.map(obj => (obj.value * obj.mult))}
+		var temp_arr = to_values(Object.values(userDB.data))
+		var elo = calc_elo(temp_arr)
+
 		standings.push({player, elo})
 	})
 
