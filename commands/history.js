@@ -45,7 +45,7 @@ async function execute(interaction) {
 
 	var msgs = await to_msgs(Object.values(userDB.data))
 
-	await interaction.reply(`# ${displayName}'s History\n${msgs.join("\n")}`)
+	await interaction.reply(`# ${displayName}'s History\n${msgs.join("\n")}`.slice(0, 2000))
 }
 
 module.exports = {
