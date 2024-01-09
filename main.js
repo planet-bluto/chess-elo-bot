@@ -597,3 +597,15 @@ global.calc_standings = async () => {
 
 	return standings
 }
+
+global.safeFetch = async (prom) => {
+	var res;
+
+	try {
+		res = await prom
+	} catch(err) {
+		res = null
+	}
+
+	return res
+}

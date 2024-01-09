@@ -21,38 +21,36 @@ command.addUserOption(option => option.setName("member")
 ///////////////////////////////////////////
 
 async function execute(interaction) {
-	print("- Historyings...")
+	let {client, channel} = interaction
 
-	var content;
+	let opt_member = interaction.options.get("member")
 
-	try {
-		let {client, channel} = interaction
+	let player = (opt_member ? opt_member.user : interaction.user )
+	let member = (opt_member ? opt_member.member : interaction.member)
+	let displayName = ( member.nickname || player.displayName || player.username )
 
-		let opt_member = interaction.options.get("member")
+	var userDB = await DB.fetch(`user/${player.id}`)
+	var to_msgs = async (arr) => {
+		var msgs = []
+		await arr.awaitForEach(async obj => {
+			var res;
+			var channel = await safeFetch(client.channels.fetch(obj.channel))
 
-		let player = (opt_member ? opt_member.user : interaction.user )
-		let member = (opt_member ? opt_member.member : interaction.member)
-		let displayName = ( member.nickname || player.displayName || player.username )
+			if (channel != null) {
+				var message = await safeFetch(channel.messages.fetch(obj.msg))
+				if (message != null) {
+					var emote = val_to_emote(obj.value)
+					msgs.push(`- ${emote} ${message.url}`)
+				}
+			}
+		})
 
-		var userDB = await DB.fetch(`user/${player.id}`)
-		var to_msgs = async (arr) => {
-			var msgs = await arr.awaitForEach(async obj => {
-				var channel = await client.channels.fetch(obj.channel)
-				var message = await channel.messages.fetch(obj.msg)
-
-				var emote = val_to_emote(obj.value)
-
-				return `- ${emote} ${message.url}`
-			})
-
-			return msgs.slice(0, 15)
-		}
-
-		var msgs = await to_msgs(Object.values(userDB.data))
-		content = `# ${displayName}'s History\n${msgs.join("\n")}`
-	} catch (err) {
-		content = err
+		return msgs
 	}
+
+	var msgs = await to_msgs(Object.values(userDB.data))
+	var content = `# ${displayName}'s History\n${msgs.join("\n")}`
+	content = content.slice(0, 1500)
 
 	await interaction.reply(content)
 }
