@@ -21,6 +21,8 @@ command.addUserOption(option => option.setName("member")
 ///////////////////////////////////////////
 
 async function execute(interaction) {
+	print("- Historyings...")
+
 	var content;
 
 	try {
