@@ -21,30 +21,36 @@ command.addUserOption(option => option.setName("member")
 ///////////////////////////////////////////
 
 async function execute(interaction) {
-	let {client, channel} = interaction
+	var content;
 
-	let opt_member = interaction.options.get("member")
+	try {
+		let {client, channel} = interaction
 
-	let player = (opt_member ? opt_member.user : interaction.user )
-	let member = (opt_member ? opt_member.member : interaction.member)
-	let displayName = ( member.nickname || player.displayName || player.username )
+		let opt_member = interaction.options.get("member")
 
-	var userDB = await DB.fetch(`user/${player.id}`)
-	var to_msgs = async (arr) => {
-		var msgs = await arr.awaitForEach(async obj => {
-			var channel = await client.channels.fetch(obj.channel)
-			var message = await channel.messages.fetch(obj.msg)
+		let player = (opt_member ? opt_member.user : interaction.user )
+		let member = (opt_member ? opt_member.member : interaction.member)
+		let displayName = ( member.nickname || player.displayName || player.username )
 
-			var emote = val_to_emote(obj.value)
+		var userDB = await DB.fetch(`user/${player.id}`)
+		var to_msgs = async (arr) => {
+			var msgs = await arr.awaitForEach(async obj => {
+				var channel = await client.channels.fetch(obj.channel)
+				var message = await channel.messages.fetch(obj.msg)
 
-			return `- ${emote} ${message.url}`
-		})
+				var emote = val_to_emote(obj.value)
 
-		return msgs.slice(0, 15)
+				return `- ${emote} ${message.url}`
+			})
+
+			return msgs.slice(0, 15)
+		}
+
+		var msgs = await to_msgs(Object.values(userDB.data))
+		content = `# ${displayName}'s History\n${msgs.join("\n")}`
+	} catch (err) {
+		content = err
 	}
-
-	var msgs = await to_msgs(Object.values(userDB.data))
-	var content = `# ${displayName}'s History\n${msgs.join("\n")}`
 
 	await interaction.reply(content)
 }
