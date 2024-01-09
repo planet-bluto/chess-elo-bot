@@ -28,7 +28,7 @@ async function execute(interaction) {
 	let member = (opt_member ? opt_member.member : interaction.member)
 	let displayName = ( member.nickname || player.displayName || player.username )
 
-	var userDB = await initDB(`user/${player.id}`, {})
+	var userDB = await DB.fetch(`user/${player.id}`)
 
 	var global_standings = await calc_standings()
 	var guild = await client.guilds.fetch(process.env["GUILD"])

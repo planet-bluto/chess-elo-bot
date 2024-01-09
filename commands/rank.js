@@ -42,7 +42,7 @@ async function execute(interaction) {
 	let member = (opt_member ? opt_member.member : interaction.member)
 	let displayName = ( member.nickname || player.displayName || player.username )
 
-	var userDB = await initDB(`user/${player.id}`, {})
+	var userDB = await DB.fetch(`user/${player.id}`)
 
 	var to_values = (arr) => {return arr.map(obj => (obj.value * obj.mult))}
 	var to_og_values = (arr) => {return arr.map(obj => (obj.value))}

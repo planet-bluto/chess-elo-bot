@@ -6,22 +6,14 @@ require("./arrayLib.js")
 var fs = require("fs")
 
 //// QUEUES ////
-var Queues = {
-	_tasks: {},
-	_advance: async (queueKey) => {
-		var task = Queues._tasks[queueKey].shift()
-		await task()
+const TaskManager = require("task-manager")
+var TaskManagers = {
+	add: (key, task) => {
+		if (TaskManagers[key] == null) {
+			TaskManagers[key] = new TaskManager()
+		}
 
-		if (Queues._tasks[queueKey].length > 0) {
-			Queues._advance(queueKey)
-		}
-	},
-	add: (queueKey, task) => {
-		if (!Array.isArray(Queues._tasks[queueKey])) { Queues._tasks[queueKey] = [] }
-		Queues._tasks[queueKey].push(task)
-		if (Queues._tasks[queueKey].length == 1) {
-			Queues._advance(queueKey)
-		}
+		return TaskManagers[key].add(task)
 	},
 }
 
@@ -45,35 +37,49 @@ const client = new Client({ intents: Object.values(IntentsBitField.Flags), parti
 var BLACKLIST = process.env["BLACKLIST"].split(",")
 
 ///// DATABASE SETUP ////
-import("lowdb").then(async (lowdb) => {	
-	const RAID_DB = require("./database/raid_db.js")
-
-	const ALL_DBS = ["repl"]
-
-	var active_dbs = []
-
-	ALL_DBS.forEach(this_db => {
-		const THIS_DB = require(`./database/${this_db}_db.js`)
-
-		var env = process.env[`${this_db.toUpperCase()}_DB`]
-		if (env && JSON.parse(env)) {
-			active_dbs.push(THIS_DB(lowdb))
-		}
-	})
-
-	var raid_db = RAID_DB(lowdb, active_dbs)
-
-	global.createDB = raid_db.createDB
-	global.initDB = raid_db.initDB
-
-	global.GLOBAL_DB = await initDB("GLOBAL")
-	if (Array.isArray(GLOBAL_DB.data.users)) {
-		delete GLOBAL_DB.data.users
-		await GLOBAL_DB.write()
-	}
-
-	start()
+const {BluDB, REPLBuilder, JSONBuilder} = require("bludb")
+const DB = new BluDB(
+	JSONBuilder(),
+	// REPLBuilder(process.env["REPLIT_DB_URL"]),
+)
+// DB.default({}, "GLOBAL")
+DB.fetch("GLOBAL").then(GlobalDB => {
+	print("- Global init'd")
 })
+
+global.DB = DB
+// global.GlobalDB
+start()
+// import("lowdb").then(async (lowdb) => {	
+// 	const RAID_DB = require("./database/raid_db.js")
+
+// 	const ALL_DBS = ["repl"]
+
+// 	var active_dbs = []
+
+// 	ALL_DBS.forEach(this_db => {
+// 		const THIS_DB = require(`./database/${this_db}_db.js`)
+
+// 		var env = process.env[`${this_db.toUpperCase()}_DB`]
+// 		if (env && JSON.parse(env)) {
+// 			active_dbs.push(THIS_DB(lowdb))
+// 		}
+// 	})
+
+// 	var raid_db = RAID_DB(lowdb, active_dbs)
+
+// 	global.createDB = raid_db.createDB
+// 	global.initDB = raid_db.initDB
+
+// 	global.GlobalDB = await initDB("GLOBAL")
+// 	// global.GlobalDB = await initDB("GLOBAL")
+// 	if (Array.isArray(GlobalDB.data.users)) {
+// 		delete GlobalDB.data.users
+// 		await GlobalDB.write()
+// 	}
+
+	
+// })
 
 //// RANKING SETUP ////
 var MAIN_GUILD = process.env["GUILD"]
@@ -208,7 +214,8 @@ async function reactionInfo(reaction) {
 	users = (users.map(user => user.id))
 	var {guild} = message
 	var player = message.author
-	var userDB = await initDB(`user/${player.id}`, {})
+	var userDB = await DB.fetch(`user/${player.id}`)
+	// print(userDB)
 
 	var elo_update = calc_update(reaction)
 
@@ -223,7 +230,8 @@ async function reactionInfo(reaction) {
 }
 
 function addReactionEvent(reaction) {
-	Queues.add("all", async () => {
+	TaskManagers.add("all", async () => {
+		var GlobalDB = await DB.fetch("GLOBAL")
 		var {channel, message, users, guild, player, userDB, valid_count, mult, elo_update} = await reactionInfo(reaction)
 
 		if (guild.id == MAIN_GUILD && elo_update != null && (mult >= 1) && (!player.bot || process.env["DEV_MODE"])) {
@@ -250,14 +258,14 @@ function addReactionEvent(reaction) {
 				log_message = await log_channel.send(content)
 			}
 
-			var read_1 = GLOBAL_DB.read()
+			var read_1 = GlobalDB.read()
 			var read_2 = userDB.read()
 			await Promise.all([read_1, read_2])
 
 			userDB.data[db_id] = {mult, value: elo_update, log: log_message.id, msg: message.id, time: Date.now()}
-			GLOBAL_DB.data[player.id] = true_elo
+			GlobalDB.data[player.id] = true_elo
 
-			var write_1 = GLOBAL_DB.write()
+			var write_1 = GlobalDB.write()
 			var write_2 = userDB.write()
 			await Promise.all([write_1, write_2])
 		}
@@ -265,7 +273,8 @@ function addReactionEvent(reaction) {
 }
 
 function removeReactionEvent(reaction, override = null) {
-	Queues.add("all", async () => {
+	TaskManagers.add("all", async () => {
+		var GlobalDB = await DB.fetch("GLOBAL")
 		var {channel, message, users, guild, player, userDB, valid_count, mult, elo_update} = await reactionInfo(reaction)
 		if (override != null) { mult = override }
 
@@ -292,7 +301,7 @@ function removeReactionEvent(reaction, override = null) {
 					print(`? Message '${update_entry.log}' Gone?`)
 				}
 
-				var read_1 = GLOBAL_DB.read()
+				var read_1 = GlobalDB.read()
 				var read_2 = userDB.read()
 				var reads = [read_1]
 				if (deletings) {reads.push(read_2)}
@@ -302,9 +311,9 @@ function removeReactionEvent(reaction, override = null) {
 					delete userDB.data[db_id]
 				}
 
-				GLOBAL_DB.data[player.id] = true_elo
+				GlobalDB.data[player.id] = true_elo
 
-				var write_1 = GLOBAL_DB.write()
+				var write_1 = GlobalDB.write()
 				var write_2 = userDB.write()
 				var writes = [write_1]
 				if (deletings) {reads.push(write_2)}
@@ -531,12 +540,13 @@ global.calc_tier = (elo) => {
 // }
 
 global.calc_standings = async () => {
+	var GlobalDB = await DB.fetch("GLOBAL")
 	var standings = []
 
-	await Object.keys(GLOBAL_DB.data).awaitForEach(async player_id => {
-		// var elo = GLOBAL_DB.data[player_id]
+	await Object.keys(GlobalDB.data).awaitForEach(async player_id => {
+		// var elo = GlobalDB.data[player_id]
 
-		var userDB = await initDB(`user/${player_id}`, {})
+		var userDB = await DB.fetch(`user/${player_id}`)
 		var to_values = (arr) => {return arr.map(obj => (obj.value * obj.mult))}
 		var temp_arr = to_values(Object.values(userDB.data))
 		var elo = calc_elo(temp_arr)
