@@ -7,7 +7,7 @@ var fs = require("fs")
 
 //// QUEUES ////
 const TaskManager = require("task-manager")
-var TaskManagers = {
+global.TaskManagers = {
 	add: (key, task) => {
 		if (TaskManagers[key] == null) {
 			TaskManagers[key] = new TaskManager()
@@ -42,9 +42,12 @@ const DB = new BluDB(
 	JSONBuilder(),
 	// REPLBuilder(process.env["REPLIT_DB_URL"]),
 )
-// DB.default({}, "GLOBAL")
+DB.default({}, "CHECK")
 DB.fetch("GLOBAL").then(GlobalDB => {
 	print("- Global init'd")
+	if (GlobalDB.data["db_update"] != 1) {
+		require("./db_update.js")(client)
+	}
 })
 
 global.DB = DB
@@ -197,8 +200,19 @@ async function elo_update_text(elo_update, mult, guild, channel, message, player
 
 	var content = `## ${text_emote} ${flavor_text} ${msg_link}\n${old_elo} *\`\`(${sign}${Math.abs(diff)})\`\`* ➡ **${elo}**`
 
+	var context = ""
+	var embeds = []
+	if (message.content != "" && (!undo)) {
+		context = message.content.slice(0, (2000 - content.length))
+		// content += context
+		embeds.push({
+			description: context
+		})
+	}
+
 	print(`${sign}${flavor_text} | ${old_elo} (${sign}${Math.abs(diff)}) → ${elo}`)
 
+	content = {content, embeds}
 	return {
 		content,
 		true_elo,
@@ -214,7 +228,7 @@ async function reactionInfo(reaction) {
 	users = (users.map(user => user.id))
 	var {guild} = message
 	var player = message.author
-	var userDB = await DB.fetch(`user/${player.id}`)
+
 	// print(userDB)
 
 	var elo_update = calc_update(reaction)
@@ -222,9 +236,28 @@ async function reactionInfo(reaction) {
 	var valid_count = users.length
 	if (users.includes(player.id) && elo_update > 0) { valid_count -= 1 }
 	BLACKLIST.forEach(blacklisted_id => { if (users.includes(blacklisted_id)) { valid_count -= 1 } })
-	// print(valid_count)
+	var pre_bot_check_valid_count = valid_count
+	if (message.author.bot) {
+		// valid_count = 0
+	}
+
+	//// THE CHECK APPEARS ////
+	if (message.author.id == client.user.id) {
+		var CheckDB = await DB.fetch(`CHECK`)
+		var thisCheck = CheckDB.data[message.id]
+		print(thisCheck)
+
+		if (thisCheck != null) {
+			player = await client.users.fetch(thisCheck)
+			// print(player.username)
+			valid_count = pre_bot_check_valid_count
+			// print(valid_count)
+		}
+	}
 
 	var mult = (valid_count / 3)
+
+	var userDB = await DB.fetch(`user/${player.id}`)
 
 	return {channel, message, users, guild, player, userDB, valid_count, mult, elo_update}
 }
@@ -241,28 +274,32 @@ function addReactionEvent(reaction) {
 			// if (userDB.data == null) { userDB.data = {} }
 
 			var {content, true_elo} = await elo_update_text(elo_update, mult, guild, channel, message, player, reaction, userDB)
+			// print(context)
 
 			var db_id = `${message.id}:${(reaction.emoji.id || reaction.emoji.name)}`
 			var update_entry = userDB?.data[db_id]
 
 			var log_message;
+
+			async function send_log_message() { log_message = await log_channel.send(content) }
+
 			if (update_entry != null) {
 				try {
 					log_message = await log_channel.messages.fetch(update_entry.log)
 					await log_message.edit(content)
 				} catch (err) {
 					print("? Message is gone?")
-					log_message = await log_channel.send(content)
+					await send_log_message()
 				}
 			} else {
-				log_message = await log_channel.send(content)
+				await send_log_message()
 			}
 
 			var read_1 = GlobalDB.read()
 			var read_2 = userDB.read()
 			await Promise.all([read_1, read_2])
 
-			userDB.data[db_id] = {mult, value: elo_update, log: log_message.id, msg: message.id, time: Date.now()}
+			userDB.data[db_id] = {mult, value: elo_update, log: log_message.id, channel: message.channel.id, msg: message.id, time: Date.now()}
 			GlobalDB.data[player.id] = true_elo
 
 			var write_1 = GlobalDB.write()

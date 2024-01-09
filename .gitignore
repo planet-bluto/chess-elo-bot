@@ -1,3 +1,4 @@
 .env
 /db
+/db_back
 /node_modules
