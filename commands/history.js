@@ -45,7 +45,7 @@ async function execute(interaction) {
 
 	var msgs = await to_msgs(Object.values(userDB.data))
 	var content = `# ${displayName}'s History\n${msgs.join("\n")}`
-	content = content.slice(0, 1500)
+	content = content.slice(0, 200)
 
 	await interaction.reply(content)
 }
