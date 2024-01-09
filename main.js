@@ -604,6 +604,7 @@ global.safeFetch = async (prom) => {
 	try {
 		res = await prom
 	} catch(err) {
+		print(err.message)
 		res = null
 	}
 
