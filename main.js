@@ -327,7 +327,7 @@ function removeReactionEvent(reaction, override = null) {
 				try {
 					var log_message = await log_channel.messages.fetch(update_entry.log)
 
-					if (log_message.author.id != client.id) {
+					if (log_message.author.id == client.id) {
 						if (deletings) {
 							log_message.delete()
 							log_channel.send(content)
