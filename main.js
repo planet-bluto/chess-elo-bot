@@ -322,6 +322,7 @@ function removeReactionEvent(reaction, override = null) {
 			if (update_entry) {
 				var log_channel = await client.channels.fetch(process.env["LOG_CHANNEL"])
 				var {content, true_elo, deletings} = await elo_update_text(elo_update, mult, guild, channel, message, player, reaction, userDB, true)
+				var newings = false
 
 				try {
 					var log_message = await log_channel.messages.fetch(update_entry.log)
@@ -334,7 +335,9 @@ function removeReactionEvent(reaction, override = null) {
 							log_message.edit(content)
 						}
 					} else {
-						log_channel.send(content)
+						var new_message = await log_channel.send(content)
+						userDB?.data[db_id].log = new_message.id
+						newings = true
 					}
 
 					// await Promise.all([prom_1, prom_2])
@@ -348,7 +351,7 @@ function removeReactionEvent(reaction, override = null) {
 				if (deletings) {reads.push(read_2)}
 				await Promise.all(reads)
 
-				if (deletings) {
+				if (deletings || newings) {
 					delete userDB.data[db_id]
 				}
 
