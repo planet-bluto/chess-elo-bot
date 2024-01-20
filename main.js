@@ -336,7 +336,7 @@ function removeReactionEvent(reaction, override = null) {
 						}
 					} else {
 						var new_message = await log_channel.send(content)
-						userDB?.data[db_id].log = new_message.id
+						userDB.data[db_id].log = new_message.id
 						newings = true
 					}
 
