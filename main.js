@@ -326,11 +326,15 @@ function removeReactionEvent(reaction, override = null) {
 				try {
 					var log_message = await log_channel.messages.fetch(update_entry.log)
 
-					if (deletings) {
-						log_message.delete()
-						log_channel.send(content)
+					if (log_message.author.id != client.id) {
+						if (deletings) {
+							log_message.delete()
+							log_channel.send(content)
+						} else {
+							log_message.edit(content)
+						}
 					} else {
-						log_message.edit(content)
+						log_channel.send(content)
 					}
 
 					// await Promise.all([prom_1, prom_2])
