@@ -552,7 +552,7 @@ global.calc_elo = (arr, rounded = true) => {
 }
 
 global.calc_tier = (elo) => {
-	const RANKS = ["gay ass nigga", "SHIT", "MID", "GOLD", "DIAMOND", "RADIANT"]
+	const RANKS = ["BLUNDER", "SHIT", "MID", "GOLD", "DIAMOND", "RADIANT"]
 
 	// var elo = 9000
 

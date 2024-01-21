@@ -106,7 +106,7 @@ async function execute(interaction) {
 	    name: `${displayName}'s Ranking`,
 	    iconURL: member.displayAvatarURL(),
 	  })
-	  .setTitle(`${rank_emote} ELO: ${elo} - ${RANK_STRING} ${rank_emote}`)
+	  .setTitle(`${rank_emote} ELO: ${elo} - ${RANK_STRING.replace("BLUNDER", "gay ass nigga")} ${rank_emote}`)
 	  .addFields(...fields)
 	  .setColor(rank_color)
 	  .setFooter({
